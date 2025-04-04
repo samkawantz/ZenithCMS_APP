@@ -1,0 +1,44 @@
+﻿@model ZenithCMS.Models.AboutPage
+
+<h2>Create New About Page</h2>
+
+<form method="post" action="@Url.Action("Create", "About")">
+    <div class="form-group mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="WhoWeAre"></label>
+        <textarea asp-for="WhoWeAre" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="WhoWeAre" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="AboutZMC"></label>
+        <textarea asp-for="AboutZMC" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="AboutZMC" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Vision"></label>
+        <textarea asp-for="Vision" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Vision" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Mission"></label>
+        <textarea asp-for="Mission" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Mission" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="CoreValues"></label>
+        <textarea asp-for="CoreValues" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="CoreValues" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a href="@Url.Action("Index", "About")" class="btn btn-secondary">Cancel</a>
+</form>

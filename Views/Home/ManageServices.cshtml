@@ -1,0 +1,239 @@
+﻿@{
+    ViewData["Title"] = "Manage Services";
+}
+
+<div class="management-container">
+    <div class="management-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Manage Services</h2>
+            <button class="btn btn-add" onclick="showServiceModal()">
+                <i class="fas fa-plus me-2"></i>Add New Service
+            </button>
+        </div>
+
+        <table class="service-table">
+            <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sample data - replace with dynamic content from your database -->
+                <tr>
+                    <td>Web Development</td>
+                    <td>Custom website development services</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="editService(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteService(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Service Modal -->
+<div class="service-modal" id="serviceModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeServiceModal()">&times;</span>
+        <h3 id="modalTitle">Add New Service</h3>
+        <form id="serviceForm" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label>Service Name</label>
+                <input type="text" id="serviceName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Service Description</label>
+                <textarea id="serviceDescription" class="form-control" rows="3" required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeServiceModal()">Cancel</button>
+                <button type="submit" class="btn btn-save">Save Service</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Existing styles remain the same */
+
+    .service-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .management-container {
+    padding: 2rem 0;
+}
+
+.service-modal {
+    z-index: 1050; /* Ensure modal appears above everything */
+}
+
+.modal-content {
+    margin: 15% auto;
+    position: relative; /* Add positioning */
+}
+
+.service-table {
+    margin-top: 20px;
+}
+    .service-table th,
+    .service-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .service-table th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .btn-add {
+        background-color: #4CAF50;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-add:hover {
+        background-color: #45a049;
+    }
+
+    .btn-edit {
+        background-color: #ffc107;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        margin-right: 8px;
+    }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+    }
+
+    .service-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background-color: rgba(0, 0, 0, 0.8);
+        margin: 15% auto;
+        padding: 20px;
+        width: 60%;
+        border-radius: 8px;
+        color: white;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    .form-actions {
+        margin-top: 20px;
+        text-align: right;
+    }
+
+    .btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        margin-right: 10px;
+    }
+</style>
+
+<script>
+    // Simple JavaScript for modal handling (replace with proper form submission logic)
+    let currentEditingRow = null;
+
+    function showServiceModal() {
+        document.getElementById('serviceModal').style.display = 'block';
+        document.getElementById('modalTitle').textContent = 'Add New Service';
+        document.getElementById('serviceForm').reset();
+        currentEditingRow = null;
+    }
+
+    function closeServiceModal() {
+        document.getElementById('serviceModal').style.display = 'none';
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+        const serviceName = document.getElementById('serviceName').value;
+        const serviceDescription = document.getElementById('serviceDescription').value;
+
+        if (currentEditingRow) {
+            // Update existing row
+            currentEditingRow.cells[0].textContent = serviceName;
+            currentEditingRow.cells[1].textContent = serviceDescription;
+        } else {
+            // Add new row
+            const tbody = document.querySelector('.service-table tbody');
+            const newRow = `
+                <tr>
+                    <td>${serviceName}</td>
+                    <td>${serviceDescription}</td>
+                    <td>
+                        <button class="btn btn-edit" onclick="editService(this)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-delete" onclick="deleteService(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML('beforeend', newRow);
+        }
+
+        closeServiceModal();
+    }
+
+    function editService(button) {
+        const row = button.closest('tr');
+        currentEditingRow = row;
+        document.getElementById('serviceName').value = row.cells[0].textContent;
+        document.getElementById('serviceDescription').value = row.cells[1].textContent;
+        document.getElementById('modalTitle').textContent = 'Edit Service';
+        document.getElementById('serviceModal').style.display = 'block';
+    }
+
+    function deleteService(button) {
+        if (confirm('Are you sure you want to delete this service?')) {
+            button.closest('tr').remove();
+        }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById('serviceModal');
+        if (event.target === modal) {
+            closeServiceModal();
+        }
+    }
+</script>

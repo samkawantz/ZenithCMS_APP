@@ -1,0 +1,22 @@
+﻿@model ZenithCMS.Models.ServicePage
+
+@{
+    ViewData["Title"] = "Add New Service";
+}
+
+<h2>Add New Service</h2>
+
+<form method="post" action="@Url.Action("Create", "Service")">
+    <div class="form-group">
+        <label for="serviceName">Service Name</label>
+        <input type="text" id="serviceName" name="ServiceName" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label for="serviceDescription">Service Description</label>
+        <textarea id="serviceDescription" name="ServiceDescription" class="form-control" required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="@Url.Action("Index", "Service")" class="btn btn-secondary">Cancel</a>
+</form>

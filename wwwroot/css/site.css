@@ -1,0 +1,38 @@
+/* Remove conflicting margin-bottom */
+
+/* Add this to enforce flex-grow behavior */
+/*main {
+    flex: 1;
+}*/
+
+/* Keep your existing styles below */
+.management-container h2 {
+    color: #fff;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-group label {
+    color: #fff;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid #ddd !important;
+    color: #333 !important;
+}
+/* Ensure proper flex behavior */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Flex container for main content */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

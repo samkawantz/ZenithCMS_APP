@@ -1,0 +1,143 @@
+﻿@model ZenithCMS.Models.ProjectDetail
+
+@{
+    ViewData["Title"] = "Edit Project";
+}
+
+<div class="flex-grow-1 h-100">
+    <div class="container h-100 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Edit Project</h2>
+            <a href="@Url.Action("Index", "Project")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Back to List
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data" action="@Url.Action("Update", "Project")">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="row">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="ClientName" class="form-label"></label>
+                                <input asp-for="ClientName" class="form-control" required>
+                                <span asp-validation-for="ClientName" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="ProjectSummary" class="form-label"></label>
+                                <textarea asp-for="ProjectSummary" class="form-control" rows="3" required></textarea>
+                                <span asp-validation-for="ProjectSummary" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label asp-for="Category" class="form-label"></label>
+                                <input asp-for="Category" class="form-control" required>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">Current Images</label>
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    @if (Model.Images != null && Model.Images.Any())
+                                    {
+                                        @foreach (var img in Model.Images)
+                                        {
+                                            <div class="position-relative">
+                                                <img src="@img.ImagePath" class="img-thumbnail"
+                                                     style="width: 120px; height: 90px; object-fit: cover">
+                                                <div class="form-check position-absolute top-0 start-0 m-1">
+                                                    <input type="checkbox" name="KeepImageIds"
+                                                           value="@img.Id" checked
+                                                           class="form-check-input">
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning">No images uploaded</div>
+                                    }
+                                </div>
+
+                                <label class="form-label">Add New Images</label>
+                                <input type="file" name="NewImages" multiple class="form-control"
+                                       accept="image/png, image/jpeg, image/jpg">
+                                <small class="form-text text-muted">Max 5 total images</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date Fields -->
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="StartDate" class="form-label"></label>
+                            <input asp-for="StartDate" type="date"
+                                   class="form-control"
+                                   value="@Model.StartDate.ToString("yyyy-MM-dd")" required>
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="EndDate" class="form-label"></label>
+                            <input asp-for="EndDate" type="date"
+                                   class="form-control"
+                                   value="@Model.EndDate.ToString("yyyy-MM-dd")" required>
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Website" class="form-label"></label>
+                            <input asp-for="Website" type="url" class="form-control"
+                                   placeholder="https://example.com">
+                            <span asp-validation-for="Website" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Project
+                        </button>
+                        <button type="button" class="btn btn-danger"
+                                onclick="confirmDelete(@Model.Id)">
+                            <i class="fas fa-trash me-2"></i>Delete Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Delete Project?',
+                text: "This will permanently remove the project and its images!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Delete Permanently'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/Project/Delete?id=${id}`, { method: "DELETE" })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Deletion failed');
+                        window.location.href = '@Url.Action("Index", "Project")';
+                    })
+                    .catch(error => Swal.fire('Error!', error.message, 'error'));
+                }
+            });
+        }
+    </script>
+}

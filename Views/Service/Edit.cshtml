@@ -1,0 +1,24 @@
+﻿@model ZenithCMS.Models.ServicePage
+
+@{
+    ViewData["Title"] = "Edit Service";
+}
+
+<h2>Edit Service</h2>
+
+<form method="post" action="@Url.Action("Update", "Service")">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label for="serviceName">Service Name</label>
+        <input type="text" id="serviceName" name="ServiceName" class="form-control" value="@Model.ServiceName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="serviceDescription">Service Description</label>
+        <textarea id="serviceDescription" name="ServiceDescription" class="form-control" required>@Model.ServiceDescription</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href="@Url.Action("Index", "Service")" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,0 +1,89 @@
+﻿@model List<ZenithCMS.Models.ServicePage>
+
+<div class="flex-grow-1 h-100">
+    <div class="container h-100 d-flex flex-column">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="mb-0">Manage Services</h2>
+            <a href="@Url.Action("Create", "Service")" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>Add New Service
+            </a>
+        </div>
+
+        <!-- Scrollable Table Container -->
+        <div class="flex-grow-1" style="overflow-y: auto; max-height: calc(100vh - 220px);">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="fw-bold">Service Name</th> <!-- Bold header -->
+                        <th>Service Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var service in Model)
+                    {
+                        <tr data-id="@service.Id">
+                            <td class="align-middle fw-bold">@service.ServiceName</td> <!-- Bold content -->
+                            <td class="align-middle">@service.ServiceDescription</td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Edit", "Service", new { id = service.Id })"
+                                       class="btn btn-warning btn-sm px-3">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm px-3"
+                                            onclick="deleteService(@service.Id)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function deleteService(id) {
+        Swal.fire({
+            title: 'Delete Service?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Delete',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                popup: 'rounded-lg'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/Service/Delete?id=${id}`, { method: "DELETE" })
+                .then(response => {
+                    if (!response.ok) throw new Error('Deletion failed');
+                    return response.json();
+                })
+                .then(() => {
+                    document.querySelector(`tr[data-id="${id}"]`).remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Service removed successfully',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(error => {
+                    Swal.fire('Error!', error.message, 'error');
+                });
+            }
+        });
+    }
+</script>
